@@ -6,14 +6,15 @@ import cartRoute from "./routes/cart.route";
 import dotenv from "dotenv";
 import { seedInitialProducts } from "./services/product.service";
 
-const app = express();
 dotenv.config();
+
+const app = express();
 const port = 3001;
 
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://localhost:27017/dentacarts?authSource=admin")
+  .connect(process.env.DB_URL || '')
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(`Failed to connect MongoDB: ${err}`));
 

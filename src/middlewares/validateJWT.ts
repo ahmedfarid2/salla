@@ -18,13 +18,7 @@ const validateJWT = (req: ExtendRequest, res: Response, next: NextFunction) => {
     return;
   }
 
-  const JWTSecret = process.env.JWT_SECRET;
-  if (!JWTSecret) {
-    res.status(500).send("JWT secret is missing. Please try again later.");
-    return;
-  }
-
-  jwt.verify(token, JWTSecret, async (err, payload) => {
+  jwt.verify(token, process.env.JWT_SECRET || "", async (err, payload) => {
     if (err || !payload) {
       res.status(403).send("Invalid token");
       return;
