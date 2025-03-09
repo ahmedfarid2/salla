@@ -3,6 +3,8 @@ import {
   postItemToCart,
   fetchCart,
   putItemInCart,
+  deleteItemFromCart,
+  clearCart,
 } from "../services/cart.service";
 import validateJWT from "../middlewares/validateJWT";
 import { ExtendRequest } from "../types/extendedRequest";
@@ -34,6 +36,26 @@ router.put("/item", validateJWT, async (req: ExtendRequest, res) => {
     productId,
     quantity,
   });
+  res.status(statusCode).send(data);
+});
+
+router.delete(
+  "/item/:productId",
+  validateJWT,
+  async (req: ExtendRequest, res) => {
+    const userId = req?.user?._id;
+    const { productId } = req.params;
+    const { data, statusCode } = await deleteItemFromCart({
+      userId,
+      productId,
+    });
+    res.status(statusCode).send(data);
+  }
+);
+
+router.delete("/", validateJWT, async (req: ExtendRequest, res) => {
+  const userId = req?.user?._id;
+  const { data, statusCode } = await clearCart({ userId });
   res.status(statusCode).send(data);
 });
 
