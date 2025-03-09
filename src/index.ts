@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import userRoute from "./routes/user.route";
 import productRoute from "./routes/product.route";
+import cartRoute from "./routes/cart.route";
 import dotenv from "dotenv";
 import { seedInitialProducts } from "./services/product.service";
 
@@ -20,6 +21,7 @@ seedInitialProducts();
 
 app.use("/user", userRoute);
 app.use("/product", productRoute);
+app.use("/cart", cartRoute);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

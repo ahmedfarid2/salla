@@ -1,7 +1,8 @@
 import productModel from "../models/product.model";
 
 export const fetchProducts = async () => {
-  return await productModel.find();
+  const data = await productModel.find();
+  return { data, statuscode: 200 };
 };
 
 export const seedInitialProducts = async () => {
@@ -45,5 +46,6 @@ export const seedInitialProducts = async () => {
 
   const existingProducts = await fetchProducts();
 
-  if (existingProducts.length === 0) await productModel.insertMany(products);
+  if (existingProducts.data.length === 0)
+    await productModel.insertMany(products);
 };

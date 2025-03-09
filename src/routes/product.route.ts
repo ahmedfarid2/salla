@@ -4,8 +4,8 @@ import { fetchProducts } from "../services/product.service";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const products = await fetchProducts();
-  res.status(200).send(products);
+  const { data, statuscode } = await fetchProducts();
+  res.status(statuscode).send(data);
 });
 
 export default router;

@@ -70,7 +70,8 @@ export const login = async ({ email, password }: LoginParams) => {
 };
 
 const generateJWT = (data: any) => {
-  if (!process.env.JWT_SECRET) {
+  const JWTSecret = process.env.JWT_SECRET;
+  if (!JWTSecret) {
     return {
       data: "JWT secret is missing. Please try again later.",
       statuscode: 500,
@@ -78,7 +79,7 @@ const generateJWT = (data: any) => {
   }
 
   try {
-    const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign(data, JWTSecret, { expiresIn: "24h" });
     return { data: token, statuscode: 200 };
   } catch (error) {
     return {
