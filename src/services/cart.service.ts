@@ -1,4 +1,5 @@
 import cartModel, { CartStatusEnum, ICartItem } from "../models/cart.model";
+import { IOrderItem, orderModel } from "../models/order.model";
 import productModel from "../models/product.model";
 
 interface PostCartParams {
@@ -181,11 +182,20 @@ export const deleteItemFromCart = async ({
   };
 };
 
-interface clearCartParams {
+const calculateTotalCartItems = ({ cartItems }: { cartItems: ICartItem[] }) => {
+  let total = cartItems.reduce((sum, item) => {
+    sum += item.unitPrice * item.quantity;
+    return sum;
+  }, 0);
+
+  return total;
+};
+
+interface ClearCartParams {
   userId: string;
 }
 
-export const clearCart = async ({ userId }: clearCartParams) => {
+export const clearCart = async ({ userId }: ClearCartParams) => {
   const cart = await fetchCart({ userId });
   cart.data.items = [];
   cart.data.totalAmout = 0;
@@ -197,11 +207,55 @@ export const clearCart = async ({ userId }: clearCartParams) => {
   };
 };
 
-const calculateTotalCartItems = ({ cartItems }: { cartItems: ICartItem[] }) => {
-  let total = cartItems.reduce((sum, item) => {
-    sum += item.unitPrice * item.quantity;
-    return sum;
-  }, 0);
+interface CheckoutParams {
+  userId: string;
+  address: string;
+}
 
-  return total;
+export const checkout = async ({ userId, address }: CheckoutParams) => {
+  if (!address) {
+    return {
+      data: "Address is required",
+      statusCode: 400,
+    };
+  }
+
+  const cart = await fetchCart({ userId });
+  const orderItems: IOrderItem[] = [];
+
+  for (const item of cart.data.items) {
+    const product = await productModel.findById(item.product);
+
+    if (!product) {
+      return {
+        data: "Product not found",
+        statusCode: 400,
+      };
+    }
+
+    const orderItem: IOrderItem = {
+      productTitle: product.title,
+      productImage: product.image,
+      productPrice: item.unitPrice,
+      productQuantity: item.quantity,
+    };
+
+    orderItems.push(orderItem);
+  }
+
+  const order = await orderModel.create({
+    items: orderItems,
+    userId: userId,
+    total: cart.data.totalAmout,
+    address: address,
+  });
+
+  await order.save();
+  cart.data.status = CartStatusEnum.Completed;
+  await cart.data.save();
+
+  return {
+    data: order,
+    statusCode: 200,
+  };
 };
