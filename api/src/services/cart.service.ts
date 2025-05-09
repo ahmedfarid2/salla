@@ -14,13 +14,28 @@ const postCart = async ({ userId }: PostCartParams) => {
 
 interface FetchCartParams {
   userId: string;
+  populateProduct?: boolean;
 }
 
-export const fetchCart = async ({ userId }: FetchCartParams) => {
-  let cart = await cartModel.findOne({
-    userId: userId,
-    status: CartStatusEnum.Active,
-  });
+export const fetchCart = async ({
+  userId,
+  populateProduct,
+}: FetchCartParams) => {
+  let cart;
+
+  if (populateProduct) {
+    cart = await cartModel
+      .findOne({
+        userId: userId,
+        status: CartStatusEnum.Active,
+      })
+      .populate("items.product");
+  } else {
+    cart = await cartModel.findOne({
+      userId: userId,
+      status: CartStatusEnum.Active,
+    });
+  }
 
   if (!cart) {
     cart = await postCart({ userId });
@@ -76,10 +91,10 @@ export const postItemToCart = async ({
   });
 
   cart.data.totalAmout += product.price * quantity;
-  const updatedCart = await cart.data.save();
+  await cart.data.save();
 
   return {
-    data: updatedCart,
+    data: await fetchCart({ userId, populateProduct: true }),
     statusCode: 200,
   };
 };
@@ -135,10 +150,10 @@ export const putItemInCart = async ({
 
   cart.data.totalAmout = total;
 
-  const updatedCart = await cart.data.save();
+  await cart.data.save();
 
   return {
-    data: updatedCart,
+    data: await fetchCart({ userId, populateProduct: true }),
     statusCode: 200,
   };
 };
@@ -174,10 +189,10 @@ export const deleteItemFromCart = async ({
   cart.data.items = otherCartItems;
   cart.data.totalAmout = total;
 
-  const updatedCart = await cart.data.save();
+  await cart.data.save();
 
   return {
-    data: updatedCart,
+    data: await fetchCart({ userId, populateProduct: true }),
     statusCode: 200,
   };
 };

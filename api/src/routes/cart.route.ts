@@ -15,7 +15,7 @@ const router = express.Router();
 router.get("/", validateJWT, async (req: ExtendRequest, res) => {
   try {
     const userId = req?.user?._id;
-    const { data, statusCode } = await fetchCart({ userId });
+    const { data, statusCode } = await fetchCart({ userId, populateProduct: true });
     res.status(statusCode).send(data);
   } catch (err) {
     res.status(500).send("Something went wrong! Please try again later.");
