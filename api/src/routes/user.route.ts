@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
       password,
     });
 
-    res.status(statuscode).send(data);
+    res.status(statuscode).json(data);
   } catch (err) {
     res.status(500).send("Something went wrong! Please try again later.");
   }
@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
       password,
     });
 
-    res.status(statuscode).send(data);
+    res.status(statuscode).json(data);
   } catch (err) {
     res.status(500).send("Something went wrong! Please try again later.");
   }
