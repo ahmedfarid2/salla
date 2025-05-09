@@ -12,8 +12,10 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useAuth } from "../context/Auth/AuthContext";
 import Grid from "@mui/material/Grid";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
+import Badge from "@mui/material/Badge";
 import { useNavigate } from "react-router-dom";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
 
 function Navbar() {
   const { username, isAuthenticated, logout } = useAuth();
@@ -39,6 +41,10 @@ function Navbar() {
     logout();
     navigate("/");
     handleCloseUserMenu();
+  };
+
+  const handleCart = () => {
+    navigate("/cart");
   };
 
   return (
@@ -76,7 +82,18 @@ function Navbar() {
                 Tech Hub
               </Typography>
             </Box>
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              gap={2}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <IconButton aria-label="cart" onClick={handleCart}>
+                <Badge badgeContent={4} color="secondary">
+                  <ShoppingCart sx={{ color: '#ffffff'}}/>
+                </Badge>
+              </IconButton>
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
@@ -128,7 +145,13 @@ function Navbar() {
                   </Menu>
                 </>
               ) : (
-                <Button variant="contained" color="success" onClick={handleLogin}>Login</Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
               )}
             </Box>
           </Box>
