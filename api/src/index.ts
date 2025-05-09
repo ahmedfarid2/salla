@@ -5,6 +5,7 @@ import productRoute from "./routes/product.route";
 import cartRoute from "./routes/cart.route";
 import dotenv from "dotenv";
 import { seedInitialProducts } from "./services/product.service";
+import cors from "cors";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(cors());
 
 mongoose
   .connect(process.env.DB_URL || '')
