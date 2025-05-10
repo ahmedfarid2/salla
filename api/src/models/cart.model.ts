@@ -15,7 +15,7 @@ export interface ICartItem {
 export interface ICart extends Document {
   userId: ObjectId | string;
   items: ICartItem[];
-  totalAmout: number;
+  totalAmount: number;
   status: CartStatusEnum;
 }
 
@@ -28,7 +28,7 @@ const cartItemSchema = new Schema<ICartItem>({
 const cartSchema = new Schema<ICart>({
   userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
   items: [cartItemSchema],
-  totalAmout: { type: Number, required: true },
+  totalAmount: { type: Number, required: true },
   status: {
     type: String,
     enum: Object.values(CartStatusEnum),

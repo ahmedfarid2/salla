@@ -7,7 +7,7 @@ interface PostCartParams {
 }
 
 const postCart = async ({ userId }: PostCartParams) => {
-  const cart = await cartModel.create({ userId, totalAmout: 0 });
+  const cart = await cartModel.create({ userId, totalAmount: 0 });
   await cart.save();
   return cart;
 };
@@ -90,7 +90,7 @@ export const postItemToCart = async ({
     quantity,
   });
 
-  cart.data.totalAmout += product.price * quantity;
+  cart.data.totalAmount += product.price * quantity;
   await cart.data.save();
 
   return {
@@ -148,7 +148,7 @@ export const putItemInCart = async ({
   existsItemInCart.quantity = quantity;
   total += existsItemInCart.unitPrice * existsItemInCart.quantity;
 
-  cart.data.totalAmout = total;
+  cart.data.totalAmount = total;
 
   await cart.data.save();
 
@@ -187,7 +187,7 @@ export const deleteItemFromCart = async ({
   const total = calculateTotalCartItems({ cartItems: otherCartItems });
 
   cart.data.items = otherCartItems;
-  cart.data.totalAmout = total;
+  cart.data.totalAmount = total;
 
   await cart.data.save();
 
@@ -213,11 +213,11 @@ interface ClearCartParams {
 export const clearCart = async ({ userId }: ClearCartParams) => {
   const cart = await fetchCart({ userId });
   cart.data.items = [];
-  cart.data.totalAmout = 0;
+  cart.data.totalAmount = 0;
 
-  const updatedCart = await cart.data.save();
+  await cart.data.save();
   return {
-    data: updatedCart,
+    data: await fetchCart({ userId, populateProduct: true }),
     statusCode: 200,
   };
 };
@@ -261,7 +261,7 @@ export const checkout = async ({ userId, address }: CheckoutParams) => {
   const order = await orderModel.create({
     items: orderItems,
     userId: userId,
-    total: cart.data.totalAmout,
+    total: cart.data.totalAmount,
     address: address,
   });
 
