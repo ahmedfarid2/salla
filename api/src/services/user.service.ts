@@ -1,6 +1,7 @@
 import userModel from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { orderModel } from "../models/order.model";
 
 interface RegisterParams {
   firstName: string;
@@ -67,6 +68,24 @@ export const login = async ({ email, password }: LoginParams) => {
   }
 
   return { data: jwtResponse.data, statuscode: jwtResponse.statuscode };
+};
+
+interface FetchMyOrdersParams {
+  userId: string;
+}
+
+export const fetchMyOrders = async ({ userId }: FetchMyOrdersParams) => {
+  try {
+    const orders = await orderModel.find({ userId });
+
+    if (!orders) {
+      return { data: "No orders found", statusCode: 404 };
+    }
+
+    return { data: orders, statusCode: 200 };
+  } catch (error) {
+    throw error;
+  }
 };
 
 const generateJWT = (data: any) => {
