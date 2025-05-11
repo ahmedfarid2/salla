@@ -10,12 +10,10 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useAuth } from "../context/Auth/AuthContext";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import Badge from "@mui/material/Badge";
-import { useNavigate } from "react-router-dom";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import { useAuth } from "../context/Auth/AuthContext";
+import { Badge, Button, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/Cart/CartContext";
 
 function Navbar() {
@@ -64,7 +62,7 @@ function Navbar() {
           >
             <Button
               variant="text"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: "#fff" }}
               onClick={() => navigate("/")}
             >
               <Box
@@ -91,9 +89,9 @@ function Navbar() {
               </Box>
             </Button>
             <Box
+              gap={4}
               display="flex"
               flexDirection="row"
-              gap={2}
               alignItems="center"
               justifyContent="center"
             >
@@ -107,8 +105,8 @@ function Navbar() {
                   <Tooltip title="Open settings">
                     <Grid
                       container
-                      alignItems={"center"}
-                      justifyContent={"center"}
+                      alignItems="center"
+                      justifyContent="center"
                       gap={2}
                     >
                       <Grid item>
@@ -117,7 +115,7 @@ function Navbar() {
                       <Grid item>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                           <Avatar
-                            alt={username ?? ""}
+                            alt={username || ""}
                             src="/static/images/avatar/2.jpg"
                           />
                         </IconButton>
@@ -141,14 +139,10 @@ function Navbar() {
                     onClose={handleCloseUserMenu}
                   >
                     <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography sx={{ textAlign: "center" }}>
-                        My Orders
-                      </Typography>
+                      <Typography textAlign="center">My Orders</Typography>
                     </MenuItem>
                     <MenuItem onClick={handleLogout}>
-                      <Typography sx={{ textAlign: "center" }}>
-                        Logout
-                      </Typography>
+                      <Typography textAlign="center">Logout</Typography>
                     </MenuItem>
                   </Menu>
                 </>
