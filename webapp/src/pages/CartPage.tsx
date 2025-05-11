@@ -16,7 +16,6 @@ const CartPage = () => {
   } = useCart();
 
   const navigate = useNavigate();
-  console.log("Rendering cart with items:", cartItems);
 
   const handleQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
